@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import img from "../../assets/images/login/login.svg";
 
-const Login = () => {
-  const handleLogin = (event) => {
+const Signup = () => {
+  const handleSignup = (event) => {
     event.preventDefault();
   };
   return (
@@ -14,7 +14,18 @@ const Login = () => {
         {/* card */}
         <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
           <div className="card-body">
-            <h1 className="text-3xl text-center font-bold">Login</h1>
+            <h1 className="text-3xl text-center font-bold">Sign Up</h1>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Name</span>
+              </label>
+              <input
+                name="name"
+                type="text"
+                placeholder="name"
+                className="input input-bordered"
+              />
+            </div>
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>
@@ -26,10 +37,10 @@ const Login = () => {
                 className="input input-bordered"
               />
             </div>
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleSignup}>
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Password</span>
+                  <span className="label-text">Confirm password</span>
                 </label>
                 <input
                   name="password"
@@ -52,7 +63,7 @@ const Login = () => {
               </div>
             </form>
             <p className="my-4 text-center">
-              New to Car Doctors? &nbsp;
+              Already have an account? &nbsp;
               <Link className="text-orange-600 font-bold" to="/signup">
                 Sign Up
               </Link>
@@ -64,4 +75,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;
