@@ -10,12 +10,10 @@ const Bookings = () => {
   const url = `http://localhost:5000/bookings?email=${user?.email}`;
 
   useEffect(() => {
-    if (user) {
-      fetch(url)
-        .then((res) => res.json())
-        .then((data) => setBookings(data));
-    }
-  });
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => setBookings(data));
+  }, [url]);
 
   const handleDelete = (id) => {
     const proceed = confirm("Are you sure you want to delete?");
@@ -35,6 +33,28 @@ const Bookings = () => {
           }
         });
     }
+  };
+
+  const handleBookingConfirm = (id) => {
+    fetch(`http://localhost:5000/bookings/${id}`, {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ status: "confirmed" }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.modifiedCount > 0) {
+          // update state
+          const remaining = bookings.filter((booking) => booking._id !== id);
+          const updated = bookings.find((booking) => booking._id === id);
+          updated.status = "confirmed";
+          const newBookings = [updated, ...remaining];
+          setBookings(newBookings);
+        }
+      });
   };
 
   return (
@@ -58,6 +78,7 @@ const Bookings = () => {
             {bookings.map((booking) => (
               <BookingRow
                 handleDelete={handleDelete}
+                handleBookingConfirm={handleBookingConfirm}
                 key={booking._id}
                 booking={booking}
               ></BookingRow>
