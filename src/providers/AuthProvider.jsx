@@ -32,9 +32,25 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      // console.log("loading: ", loading);
       setUser(currentUser);
-      console.log("current user: ", currentUser);
+      // console.log("current user: ", currentUser);
+      setLoading(false);
+      // Save user's authentication state to local storage
+      // to make state persistent
+      /* localStorage.setItem("user", JSON.stringify(currentUser)); */
     });
+
+    //Retrieve user's authentication state from local storage
+    /* const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (savedUser) {
+      setUser(savedUser);
+    } */
+
+    console.log("user after setUser: ", user);
+
+    // setLoading(false);
+
     return () => {
       return unsubscribe;
     };

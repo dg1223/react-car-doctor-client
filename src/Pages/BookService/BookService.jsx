@@ -23,7 +23,7 @@ const BookService = () => {
       service: title,
       price,
     };
-    console.log(booking);
+    // console.log(booking);
 
     // store booking data in DB
     fetch("http://localhost:5000/bookings", {
@@ -35,7 +35,7 @@ const BookService = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if (data.insertedId) {
           alert("Service booked successfully");
         }
