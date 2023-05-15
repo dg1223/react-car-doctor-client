@@ -47,7 +47,7 @@ const AuthProvider = ({ children }) => {
       setUser(savedUser);
     } */
 
-    console.log("user after setUser: ", user);
+    // console.log("user after setUser: ", user);
 
     // setLoading(false);
 
