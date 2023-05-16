@@ -1,9 +1,11 @@
 import { createContext, useEffect, useState } from "react";
 import {
+  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
 } from "firebase/auth";
 import app from "../firebase/firebase.config";
@@ -14,6 +16,7 @@ const auth = getAuth(app);
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const googleProvider = new GoogleAuthProvider();
 
   const createUser = (email, password) => {
     setLoading(true);
@@ -25,6 +28,11 @@ const AuthProvider = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
+  const googleSignIn = () => {
+    setLoading(true);
+    return signInWithPopup(auth, googleProvider);
+  };
+
   const logOut = () => {
     setLoading(true);
     return signOut(auth);
@@ -34,22 +42,32 @@ const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       // console.log("loading: ", loading);
       setUser(currentUser);
-      // console.log("current user: ", currentUser);
+      console.log("current user in auth provider: ", currentUser);
       setLoading(false);
-      // Save user's authentication state to local storage
-      // to make state persistent
-      /* localStorage.setItem("user", JSON.stringify(currentUser)); */
+
+      // after user logs in, generate access token
+      if (currentUser && currentUser.email) {
+        const loggedUser = {
+          email: currentUser.email,
+        };
+        fetch("http://localhost:5000/jwt", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(loggedUser),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("jwt response", data);
+            /* WARNING: Local storage is not the best place
+              to store access token */
+            localStorage.setItem("car-access-token", data.token);
+          });
+      } else {
+        localStorage.removeItem("car-access-token");
+      }
     });
-
-    //Retrieve user's authentication state from local storage
-    /* const savedUser = JSON.parse(localStorage.getItem("user"));
-    if (savedUser) {
-      setUser(savedUser);
-    } */
-
-    // console.log("user after setUser: ", user);
-
-    // setLoading(false);
 
     return () => {
       return unsubscribe;
@@ -62,6 +80,7 @@ const AuthProvider = ({ children }) => {
     createUser,
     signIn,
     logOut,
+    googleSignIn,
   };
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
