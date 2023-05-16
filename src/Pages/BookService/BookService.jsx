@@ -26,7 +26,7 @@ const BookService = () => {
     // console.log(booking);
 
     // store booking data in DB
-    fetch("http://localhost:5000/bookings", {
+    fetch("https://mongodb-expressjs-car-doctor-server.vercel.app/bookings", {
       method: "POST",
       headers: {
         "content-type": "application/json",

@@ -6,7 +6,7 @@ const BookingRow = ({ booking, handleDelete, handleBookingConfirm }) => {
   /* const handleDelete = (id) => {
     const proceed = confirm("Are you sure you want to delete?");
     if (proceed) {
-      fetch(`http://localhost:5000/bookings/${id}`, {
+      fetch(`https://mongodb-expressjs-car-doctor-server.vercel.app/bookings/${id}`, {
         method: "DELETE",
       })
         .then((res) => res.json())
